@@ -1,52 +1,27 @@
-# Prerequisites
-*.d
+# Diretórios e arquivos gerados pela build
+bin/
+obj/
+out/
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+# Arquivos de log
+*.log
 
-# Linker output
-*.ilk
-*.map
-*.exp
+# Arquivos temporários
+*.tmp
+*.swp
 
-# Precompiled Headers
-*.gch
-*.pch
+# Arquivos de usuário do Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
+# Arquivos de compilação
 *.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
 *.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
-# Debug files
-*.dSYM/
-*.su
-*.idb
 *.pdb
-
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+*.cache
+*.pdb
+*.rsp
+*.dmp
