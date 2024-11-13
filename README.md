@@ -1,5 +1,6 @@
 # RentalCar.Category
-Sistema de gestão de Categoria da loja de aluguer de carros
+Sistema de gestão de Categoria da loja de aluguer de carros.
+Devenvolvimento do microserviço usando minimal api.
 
 # Language
 1. C#
@@ -8,7 +9,7 @@ Sistema de gestão de Categoria da loja de aluguer de carros
 1. .NET CORE 8.0
 
 # Data Base
-1. PostgreSQL
+1. MySql
 
 # Arquitectura
 1. Arquitetura Limpa (Clean Architecture)

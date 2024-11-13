@@ -1,0 +1,36 @@
+services:
+  rentalcar.categories.api:
+    image: ${DOCKER_REGISTRY-}rentalcarcategoriesapi
+    build:
+      context: .
+      dockerfile: RentalCar.Category.Api/Dockerfile
+    container_name: category.api
+    environment:
+      - MYSQL_ROOT_PASSWORD= Admin2k24@
+      - RabbitMQ__HostName=host.docker.internal
+      - RabbitMQ__UserName=admin
+      - RabbitMQ__Password=Admin2k24@
+    depends_on:
+      - category.db
+    ports:
+        - "804:8080"
+        - "805:8081"
+    volumes:
+      - appLog:/var/log
+
+  category.db:
+    image: mysql:8.0.40
+    restart: always
+    container_name: category.mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Admin2k24@
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysqldata:/var/lib/mysql
+
+
+volumes:
+  appLog:
+  mysqldata:
+  
