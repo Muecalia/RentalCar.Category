@@ -26,7 +26,7 @@ jobs:
       run: dotnet restore ./RentalCar.Categories.Api/RentalCar.Categories.Api.csproj
 
     - name: Restore dependencies Tests
-      run: dotnet restore ./RentalCar.Categories.UnitTest/RentalCar.Categories.UnitTest.csproject
+      run: dotnet restore ./RentalCar.Categories.UnitTest/RentalCar.Categories.UnitTest.csproj
       
     - name: Build
       run: dotnet build ./RentalCar.Categories.Api/RentalCar.Categories.Api.csproj --no-restore
