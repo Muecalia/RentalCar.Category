@@ -23,10 +23,10 @@ jobs:
         dotnet-version: 8.0.x
         
     - name: Restore dependencies
-      run: dotnet restore ./RentalCar.Category/RentalCar.Categories.Api/RentalCar.Categories.Api.csproj
+      run: dotnet restore ./RentalCar.Categories.Api/RentalCar.Categories.Api.csproj
       
     - name: Build
-      run: dotnet build ./RentalCar.Category/RentalCar.Categories.Api/RentalCar.Categories.Api.csproj --no-restore
+      run: dotnet build ./RentalCar.Categories.Api/RentalCar.Categories.Api.csproj --no-restore
       
     #- name: Test
      # run: dotnet test --no-build --verbosity normal
