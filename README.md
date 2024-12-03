@@ -43,3 +43,7 @@ Sistema de gestão de Categoria da loja de aluguer de carros.
 
 # Tracing 
 1. Jeager
+
+# Migration
+dotnet ef migrations add FirstMigration --project RentalCar.Categories.Infrastructure -s RentalCar.Categories.Api
+dotnet ef database update --project RentalCar.Categories.Infrastructure -s RentalCar.Categories.Api
