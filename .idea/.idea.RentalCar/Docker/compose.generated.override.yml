@@ -1,0 +1,21 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  rentalcar.categories.api:
+    build:
+      context: "/home/amed/RiderProjects/RentalCar.Category"
+      dockerfile: "RentalCar.Categories.Api/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/RentalCar.Categories.Api.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "rentalcar.categories.api:dev"
+    ports: []
+    volumes:
+    - "/home/amed/RiderProjects/RentalCar.Category/RentalCar.Categories.Api:/app:rw"
+    - "/home/amed/RiderProjects/RentalCar.Category:/src:rw"
+    - "/home/amed/.microsoft/usersecrets:/home/app/.microsoft/usersecrets"
+    - "/home/amed/.nuget/packages:/home/app/.nuget/packages"
+    working_dir: "/app"
