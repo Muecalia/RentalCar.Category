@@ -20,7 +20,7 @@ Sistema de gestão de Categoria da loja de aluguer de carros.
 # Container
 1. Docker
 2. docker-compose
-3. Requirements: Docker installed
+3. Requirements: Docker instalado
 4. Run container: docker-compose up -d
 5. Down container: docker-compose down
 
@@ -37,8 +37,11 @@ Sistema de gestão de Categoria da loja de aluguer de carros.
 # Logs
 1. Serilog
 
+# Observabilidade
+1. OpenTelemetry
+
 # Monitoramento
-1. Prometheus
+1. Prometheus 
 2. Grafana
 
 # Tracing 

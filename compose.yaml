@@ -14,6 +14,8 @@
       - "801:8081"
     volumes:
       - category.log:/var/log
+    networks:
+      - nt_category
 
   category.db:
     image: mysql:8.0.40
@@ -25,7 +27,13 @@
       - "3307:3306"
     volumes:
       - categoryData:/var/lib/mysql
-  
+    networks:
+      - nt_category
+      
 volumes:
   category.log:
   categoryData:
+
+networks:
+  nt_category:
+    driver: bridge

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Net;
+using MediatR;
 using RentalCar.Categories.Application.Commands.Request.Categories;
 using RentalCar.Categories.Application.Commands.Response.Categories;
 using RentalCar.Categories.Application.Wrappers;
@@ -12,36 +13,40 @@ namespace RentalCar.Categories.Application.Handlers.Categories
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly ILoggerService _loggerService;
+        private readonly IPrometheusService _prometheusService;
 
-        public DeleteCategoryHandler(ICategoryRepository categoryRepository, ILoggerService loggerService)
+        public DeleteCategoryHandler(ICategoryRepository categoryRepository, ILoggerService loggerService, IPrometheusService prometheusService)
         {
             _categoryRepository = categoryRepository;
             _loggerService = loggerService;
+            _prometheusService = prometheusService;
         }
 
         public async Task<ApiResponse<InputCategoryResponse>> Handle(DeleteCategoryRequest request, CancellationToken cancellationToken)
         {
-            const string Objecto = "categoria";
-            const string Operacao = "eliminar";
+            const string objecto = "categoria";
+            const string operacao = "eliminar"; 
             try
             {
                 var category = await _categoryRepository.GetById(request.Id, cancellationToken);
                 if (category == null)
                 {
-                    _loggerService.LogWarning(MensagemError.NotFound(Objecto, request.Id));
-                    return ApiResponse<InputCategoryResponse>.Error(MensagemError.NotFound(Objecto));
+                    _prometheusService.AddCategoryCounter(HttpStatusCode.NotFound.ToString());
+                    _loggerService.LogWarning(MensagemError.NotFound(objecto, request.Id));
+                    return ApiResponse<InputCategoryResponse>.Error(MensagemError.NotFound(objecto));
                 }
 
                 await _categoryRepository.Delete(category, cancellationToken);
 
                 var result = new InputCategoryResponse(category.Id, category.Name, category.DailyPrice);
-
-                return ApiResponse<InputCategoryResponse>.Success(result, MensagemError.OperacaoSucesso(Objecto, Operacao));
+                _prometheusService.AddCategoryCounter(HttpStatusCode.OK.ToString());
+                return ApiResponse<InputCategoryResponse>.Success(result, MensagemError.OperacaoSucesso(objecto, operacao));
             }
             catch (Exception ex)
             {
-                _loggerService.LogError(MensagemError.OperacaoErro(Objecto, Operacao, ex.Message));
-                return ApiResponse<InputCategoryResponse>.Error(MensagemError.OperacaoErro(Objecto, Operacao));
+                _prometheusService.AddCategoryCounter(HttpStatusCode.BadRequest.ToString());
+                _loggerService.LogError(MensagemError.OperacaoErro(objecto, operacao, ex.Message));
+                return ApiResponse<InputCategoryResponse>.Error(MensagemError.OperacaoErro(objecto, operacao));
                 //throw;
             }
         }

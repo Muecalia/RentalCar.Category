@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using RentalCar.Categories.Api;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using RentalCar.Categories.Api.Endpoints;
 using RentalCar.Categories.Application;
 using RentalCar.Categories.Core.Configs;
@@ -7,13 +11,7 @@ using RentalCar.Categories.Infrastructure;
 using RentalCar.Categories.Infrastructure.Persistence;
 using Serilog;
 
-//namespace RentalCar.Categories.Api;
-
-//public class Program
-//{
-    //public static void Main(string[] args)
-    //{
-    var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
     //LOG
     Log.Logger = new LoggerConfiguration()
@@ -46,7 +44,39 @@ using Serilog;
     
     //Authorization
     builder.Services.AddAuthorization();
+    
+    //Opentelemry
+    const string serviceName = "category";
+    const string serviceVersion = "v1";
+    //const string endPoint = "http://localhost:5299";
+    const string endPoint = "https://localhost:7163";
 
+    builder.Services.AddOpenTelemetry()
+        .ConfigureResource(resource => resource.AddService(serviceName))
+        .WithTracing(tracing => tracing
+            .SetResourceBuilder(ResourceBuilder.CreateDefault()
+                .AddService(serviceName: serviceName, serviceVersion:serviceVersion))
+           .AddAspNetCoreInstrumentation()
+           .AddOtlpExporter()
+           .AddConsoleExporter())
+        .WithMetrics(metrics => metrics
+            .AddConsoleExporter()
+            .AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddRuntimeInstrumentation()
+            .AddPrometheusExporter()
+        );
+
+    
+    /*builder.Logging.AddOpenTelemetry(options =>
+    {
+        options
+            .SetResourceBuilder(
+                ResourceBuilder.CreateDefault()
+                    .AddService(serviceName))
+            .AddConsoleExporter();
+    });*/
+    
     //CORS
     builder.Services.AddCors(options =>
     {
@@ -71,13 +101,13 @@ using Serilog;
         app.UseSwagger();
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RentalCar Categoria v1"));
     }
-
+    
+    app.UseOpenTelemetryPrometheusScrapingEndpoint();
+    
     app.UseCors(MyAllowSpecificOrigins);
-
+    
     app.UseHttpsRedirection();
-
+    
     app.UseAuthorization();
-
+    
     app.Run();
-    //}
-//}
