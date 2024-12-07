@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RentalCar.Categories.Core.Repositories;
 using RentalCar.Categories.Core.Services;
 using RentalCar.Categories.Infrastructure.MessageBus;
+using RentalCar.Categories.Infrastructure.Prometheus;
 using RentalCar.Categories.Infrastructure.Repositories;
 using RentalCar.Categories.Infrastructure.Services;
 
@@ -20,6 +21,8 @@ public static class InfrastructureModule
     {
         services.AddSingleton<ILoggerService, LoggerService>();
         services.AddSingleton<IRabbitMqService, RabbitMqService>();
+
+        services.AddSingleton<IPrometheusService, PrometheusService>();
 
         services.AddScoped<ICategoryRepository, CategoryRepository>();
 
