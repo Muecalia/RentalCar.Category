@@ -1,0 +1,38 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+        
+    - name: Restore dependencies API
+      run: dotnet restore ./RentalCar.Categories.Api/RentalCar.Categories.Api.csproj
+
+    - name: Restore dependencies Tests
+      run: dotnet restore ./RentalCar.Categories.UnitTest/RentalCar.Categories.UnitTest.csproj
+      
+    - name: Build API
+      run: dotnet build ./RentalCar.Categories.Api/RentalCar.Categories.Api.csproj --no-restore
+
+    #- name: Build Tests
+    #  run: dotnet build ./RentalCar.Categories.UnitTest/RentalCar.Categories.UnitTest.csproj --no-restore
+      
+    #- name: Test
+     # run: dotnet test ./RentalCar.Categories.UnitTest/RentalCar.Categories.UnitTest.csproj --no-build --verbosity normal
