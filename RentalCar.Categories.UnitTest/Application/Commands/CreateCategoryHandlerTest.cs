@@ -27,13 +27,16 @@ namespace RentalCar.Categories.UnitTest.Application.Commands
                 Name = "Categoria 1"
             };
 
-            var categoryRepositoryMock = new Mock<ICategoryRepository>();
-            var loggerServiceMock = new Mock<ILoggerService>();
+            var _categoryRepositoryMock = new Mock<ICategoryRepository>();
+            var _loggerServiceMock = new Mock<ILoggerService>();
+            var _prometheusServiceMock = new Mock<IPrometheusService>();
 
-            categoryRepositoryMock.Setup(repo => repo.IsCategoryExist(It.IsAny<string>(), new CancellationToken())).ReturnsAsync(false);
-            categoryRepositoryMock.Setup(repo => repo.Create(It.IsAny<Category>(), new CancellationToken())).ReturnsAsync(category);
+            _categoryRepositoryMock.Setup(repo => repo.IsCategoryExist(It.IsAny<string>(), new CancellationToken())).ReturnsAsync(false);
+            _categoryRepositoryMock.Setup(repo => repo.Create(It.IsAny<Category>(), new CancellationToken())).ReturnsAsync(category);
+            _prometheusServiceMock.Setup(service => service.AddCategoryCounter(It.IsAny<string>()));
 
-            var createCategoryHandler = new CreateCategoryHandler(categoryRepositoryMock.Object, loggerServiceMock.Object);
+            //_prometheusService.AddCategoryCounter(HttpStatusCode.Created.ToString());
+            var createCategoryHandler = new CreateCategoryHandler(_categoryRepositoryMock.Object, _loggerServiceMock.Object, _prometheusServiceMock.Object);
 
             // Act
             var result = await createCategoryHandler.Handle(createCategoryRequest, new CancellationToken());
@@ -43,9 +46,8 @@ namespace RentalCar.Categories.UnitTest.Application.Commands
             result.Succeeded.Should().BeTrue();
             result.Message.Should().NotBeNullOrEmpty();
 
-            categoryRepositoryMock.Verify(repo => repo.IsCategoryExist(It.IsAny<string>(), new CancellationToken()), Times.Once);
-            categoryRepositoryMock.Verify(repo => repo.Create(It.IsAny<Category>(), new CancellationToken()), Times.Once);
-
+            _categoryRepositoryMock.Verify(repo => repo.IsCategoryExist(It.IsAny<string>(), new CancellationToken()), Times.Once);
+            _categoryRepositoryMock.Verify(repo => repo.Create(It.IsAny<Category>(), new CancellationToken()), Times.Once);
         }
     }
 }

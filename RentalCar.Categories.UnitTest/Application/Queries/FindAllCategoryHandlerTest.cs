@@ -22,12 +22,15 @@ namespace RentalCar.Categories.UnitTest.Application.Queries
                 new() { Id = "Id 4", Name = "Name 4", DailyPrice = 150, CreatedAt = DateTime.Now },
             };
 
-            var categoryRepositoryMock = new Mock<ICategoryRepository>();
-            var loggerServiceMock = new Mock<ILoggerService>();
 
-            categoryRepositoryMock.Setup(repo => repo.GetAll(new CancellationToken())).ReturnsAsync(categories);
+            var _categoryRepositoryMock = new Mock<ICategoryRepository>();
+            var _loggerServiceMock = new Mock<ILoggerService>();
+            var _prometheusServiceMock = new Mock<IPrometheusService>();
 
-            var findAllCategoriesHandler = new FindAllCategoriesHandler(categoryRepositoryMock.Object, loggerServiceMock.Object);
+            _categoryRepositoryMock.Setup(repo => repo.GetAll(new CancellationToken())).ReturnsAsync(categories);
+            _prometheusServiceMock.Setup(service => service.AddCategoryCounter(It.IsAny<string>()));
+            
+            var findAllCategoriesHandler = new FindAllCategoriesHandler(_categoryRepositoryMock.Object, _loggerServiceMock.Object, _prometheusServiceMock.Object);
 
             // Act
             var result = await findAllCategoriesHandler.Handle(new FindAllCategoriesRequest(), new CancellationToken());
@@ -38,7 +41,8 @@ namespace RentalCar.Categories.UnitTest.Application.Queries
             result.Succeeded.Should().BeTrue();
             result.Datas.Count.Should().Be(categories.Count);
 
-            categoryRepositoryMock.Verify(repo => repo.GetAll(new CancellationToken()), Times.Once);
+            _categoryRepositoryMock.Verify(repo => repo.GetAll(new CancellationToken()), Times.Once);
+
         }
     }
 }

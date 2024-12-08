@@ -28,13 +28,15 @@ namespace RentalCar.Categories.UnitTest.Application.Commands
                 DialyPrice = 50,
             };
 
-            var categoryRepositoryMock = new Mock<ICategoryRepository>();
-            var loggerServiceMock = new Mock<ILoggerService>();
+            var _categoryRepositoryMock = new Mock<ICategoryRepository>();
+            var _loggerServiceMock = new Mock<ILoggerService>();
+            var _prometheusServiceMock = new Mock<IPrometheusService>();
 
-            categoryRepositoryMock.Setup(repo => repo.GetById(It.IsAny<string>(), new CancellationToken())).ReturnsAsync(category);
-            categoryRepositoryMock.Setup(repo => repo.Update(It.IsAny<Category>(), new CancellationToken()));
+            _categoryRepositoryMock.Setup(repo => repo.GetById(It.IsAny<string>(), new CancellationToken())).ReturnsAsync(category);
+            _categoryRepositoryMock.Setup(repo => repo.Update(It.IsAny<Category>(), new CancellationToken()));
+            _prometheusServiceMock.Setup(service => service.AddCategoryCounter(It.IsAny<string>()));
 
-            var updadeCategoryHandler = new UpdadeCategoryHandler(categoryRepositoryMock.Object, loggerServiceMock.Object);
+            var updadeCategoryHandler = new UpdadeCategoryHandler(_categoryRepositoryMock.Object, _loggerServiceMock.Object, _prometheusServiceMock.Object);
 
             // Act
             var result = await updadeCategoryHandler.Handle(updateCategoryRequest, new CancellationToken());
@@ -44,9 +46,8 @@ namespace RentalCar.Categories.UnitTest.Application.Commands
             result.Message.Should().NotBeNullOrEmpty();
             result.Succeeded.Should().BeTrue();
 
-            categoryRepositoryMock.Verify(repo => repo.GetById(It.IsAny<string>(), new CancellationToken()), Times.Once);
-            categoryRepositoryMock.Verify(repo => repo.Update(It.IsAny<Category>(), new CancellationToken()), Times.Once);
-
+            _categoryRepositoryMock.Verify(repo => repo.GetById(It.IsAny<string>(), new CancellationToken()), Times.Once);
+            _categoryRepositoryMock.Verify(repo => repo.Update(It.IsAny<Category>(), new CancellationToken()), Times.Once);
         }
     }
 }

@@ -21,12 +21,14 @@ namespace RentalCar.Categories.UnitTest.Application.Queries
                 DailyPrice = 50
             };
 
-            var categoryRepositoryMock = new Mock<ICategoryRepository>();
-            var loggerServiceMock = new Mock<ILoggerService>();
+            var _categoryRepositoryMock = new Mock<ICategoryRepository>();
+            var _loggerServiceMock = new Mock<ILoggerService>();
+            var _prometheusServiceMock = new Mock<IPrometheusService>();
 
-            categoryRepositoryMock.Setup(repo => repo.GetById(It.IsAny<string>(), new CancellationToken())).ReturnsAsync(category);
+            _categoryRepositoryMock.Setup(repo => repo.GetById(It.IsAny<string>(), new CancellationToken())).ReturnsAsync(category);
+            _prometheusServiceMock.Setup(service => service.AddCategoryCounter(It.IsAny<string>()));
 
-            var findCategoryByIdHandler = new FindCategoryByIdHandler(categoryRepositoryMock.Object, loggerServiceMock.Object);
+            var findCategoryByIdHandler = new FindCategoryByIdHandler(_categoryRepositoryMock.Object, _loggerServiceMock.Object, _prometheusServiceMock.Object);
 
             // Act
             var result = await findCategoryByIdHandler.Handle(new FindCategoryByIdRequest("Id"), new CancellationToken());
@@ -36,7 +38,8 @@ namespace RentalCar.Categories.UnitTest.Application.Queries
             result.Message.Should().NotBeNullOrEmpty();
             result.Succeeded.Should().BeTrue();
 
-            categoryRepositoryMock.Verify(repo => repo.GetById(It.IsAny<string>(), new CancellationToken()), Times.Once);
+            _categoryRepositoryMock.Verify(repo => repo.GetById(It.IsAny<string>(), new CancellationToken()), Times.Once);
+          
         }
     }
 }
