@@ -34,5 +34,6 @@ jobs:
     - name: Build Tests
       run: dotnet build ./RentalCar.Categories.UnitTest/RentalCar.Categories.UnitTest.csproj --no-restore
       
-    - name: Test
+    - name: Tests
       run: dotnet test ./RentalCar.Categories.UnitTest/RentalCar.Categories.UnitTest.csproj --no-build --verbosity normal
+      
