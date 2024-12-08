@@ -31,8 +31,8 @@ jobs:
     - name: Build API
       run: dotnet build ./RentalCar.Categories.Api/RentalCar.Categories.Api.csproj --no-restore
 
-    #- name: Build Tests
-    #  run: dotnet build ./RentalCar.Categories.UnitTest/RentalCar.Categories.UnitTest.csproj --no-restore
+    - name: Build Tests
+      run: dotnet build ./RentalCar.Categories.UnitTest/RentalCar.Categories.UnitTest.csproj --no-restore
       
-    #- name: Test
-     # run: dotnet test ./RentalCar.Categories.UnitTest/RentalCar.Categories.UnitTest.csproj --no-build --verbosity normal
+    - name: Test
+      run: dotnet test ./RentalCar.Categories.UnitTest/RentalCar.Categories.UnitTest.csproj --no-build --verbosity normal
