@@ -31,6 +31,7 @@ namespace RentalCar.Categories.UnitTest.Application.Commands
 
             var deleteCategoryHandler = new DeleteCategoryHandler(categoryRepositoryMock.Object, loggerServiceMock.Object, prometheusServiceMock.Object);
 
+
             // Act
             var result = await deleteCategoryHandler.Handle(new DeleteCategoryRequest("Id"), It.IsAny<CancellationToken>());
 
