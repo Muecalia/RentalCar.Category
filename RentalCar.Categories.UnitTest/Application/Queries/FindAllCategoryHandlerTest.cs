@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
-using RentalCar.Categories.Application.Handlers.Categories;
-using RentalCar.Categories.Application.Queries.Request.Categories;
+using RentalCar.Categories.Application.Handlers;
+using RentalCar.Categories.Application.Queries.Request;
 using RentalCar.Categories.Core.Entities;
 using RentalCar.Categories.Core.Repositories;
 using RentalCar.Categories.Core.Services;
@@ -22,17 +22,17 @@ namespace RentalCar.Categories.UnitTest.Application.Queries
                 new() { Id = "Id 4", Name = "Name 4", DailyPrice = 150, CreatedAt = DateTime.Now },
             };
 
-            var _categoryRepositoryMock = new Mock<ICategoryRepository>();
-            var _loggerServiceMock = new Mock<ILoggerService>();
-            var _prometheusServiceMock = new Mock<IPrometheusService>();
+            var categoryRepositoryMock = new Mock<ICategoryRepository>();
+            var loggerServiceMock = new Mock<ILoggerService>();
+            var prometheusServiceMock = new Mock<IPrometheusService>();
 
-            _categoryRepositoryMock.Setup(repo => repo.GetAll(new CancellationToken())).ReturnsAsync(categories);
-            _prometheusServiceMock.Setup(service => service.AddCategoryCounter(It.IsAny<string>()));
+            categoryRepositoryMock.Setup(repo => repo.GetAll(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(categories);
+            prometheusServiceMock.Setup(service => service.AddFindAllCategorysCounter(It.IsAny<string>()));
             
-            var findAllCategoriesHandler = new FindAllCategoriesHandler(_categoryRepositoryMock.Object, _loggerServiceMock.Object, _prometheusServiceMock.Object);
+            var findAllCategoriesHandler = new FindAllCategoriesHandler(categoryRepositoryMock.Object, loggerServiceMock.Object, prometheusServiceMock.Object);
 
             // Act
-            var result = await findAllCategoriesHandler.Handle(new FindAllCategoriesRequest(), new CancellationToken());
+            var result = await findAllCategoriesHandler.Handle(new FindAllCategoriesRequest(1, 5), It.IsAny<CancellationToken>());
 
             // Assert
             result.Datas.Should().NotBeNull();
@@ -40,7 +40,7 @@ namespace RentalCar.Categories.UnitTest.Application.Queries
             result.Succeeded.Should().BeTrue();
             result.Datas.Count.Should().Be(categories.Count);
 
-            _categoryRepositoryMock.Verify(repo => repo.GetAll(new CancellationToken()), Times.Once);
+            categoryRepositoryMock.Verify(repo => repo.GetAll(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

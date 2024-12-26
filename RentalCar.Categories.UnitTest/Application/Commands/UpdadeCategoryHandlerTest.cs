@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
-using RentalCar.Categories.Application.Commands.Request.Categories;
-using RentalCar.Categories.Application.Handlers.Categories;
+using RentalCar.Categories.Application.Commands.Request;
+using RentalCar.Categories.Application.Handlers;
 using RentalCar.Categories.Core.Entities;
 using RentalCar.Categories.Core.Repositories;
 using RentalCar.Categories.Core.Services;
@@ -28,26 +28,26 @@ namespace RentalCar.Categories.UnitTest.Application.Commands
                 DialyPrice = 50,
             };
 
-            var _categoryRepositoryMock = new Mock<ICategoryRepository>();
-            var _loggerServiceMock = new Mock<ILoggerService>();
-            var _prometheusServiceMock = new Mock<IPrometheusService>();
+            var categoryRepositoryMock = new Mock<ICategoryRepository>();
+            var loggerServiceMock = new Mock<ILoggerService>();
+            var prometheusServiceMock = new Mock<IPrometheusService>();
 
-            _categoryRepositoryMock.Setup(repo => repo.GetById(It.IsAny<string>(), new CancellationToken())).ReturnsAsync(category);
-            _categoryRepositoryMock.Setup(repo => repo.Update(It.IsAny<Category>(), new CancellationToken()));
-            _prometheusServiceMock.Setup(service => service.AddCategoryCounter(It.IsAny<string>()));
+            categoryRepositoryMock.Setup(repo => repo.GetById(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(category);
+            categoryRepositoryMock.Setup(repo => repo.Update(It.IsAny<Category>(), It.IsAny<CancellationToken>()));
+            prometheusServiceMock.Setup(service => service.AddUpdateCategoryCounter(It.IsAny<string>()));
 
-            var updadeCategoryHandler = new UpdadeCategoryHandler(_categoryRepositoryMock.Object, _loggerServiceMock.Object, _prometheusServiceMock.Object);
+            var updadeCategoryHandler = new UpdadeCategoryHandler(categoryRepositoryMock.Object, loggerServiceMock.Object, prometheusServiceMock.Object);
 
             // Act
-            var result = await updadeCategoryHandler.Handle(updateCategoryRequest, new CancellationToken());
+            var result = await updadeCategoryHandler.Handle(updateCategoryRequest, It.IsAny<CancellationToken>());
 
             // Assert
             result.Data.Should().NotBeNull();
             result.Message.Should().NotBeNullOrEmpty();
             result.Succeeded.Should().BeTrue();
 
-            _categoryRepositoryMock.Verify(repo => repo.GetById(It.IsAny<string>(), new CancellationToken()), Times.Once);
-            _categoryRepositoryMock.Verify(repo => repo.Update(It.IsAny<Category>(), new CancellationToken()), Times.Once);
+            categoryRepositoryMock.Verify(repo => repo.GetById(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+            categoryRepositoryMock.Verify(repo => repo.Update(It.IsAny<Category>(), It.IsAny<CancellationToken>()), Times.Once);
 
         }
     }
