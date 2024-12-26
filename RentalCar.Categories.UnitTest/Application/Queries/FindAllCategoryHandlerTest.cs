@@ -22,6 +22,7 @@ namespace RentalCar.Categories.UnitTest.Application.Queries
                 new() { Id = "Id 4", Name = "Name 4", DailyPrice = 150, CreatedAt = DateTime.Now },
             };
 
+
             var _categoryRepositoryMock = new Mock<ICategoryRepository>();
             var _loggerServiceMock = new Mock<ILoggerService>();
             var _prometheusServiceMock = new Mock<IPrometheusService>();
@@ -41,6 +42,7 @@ namespace RentalCar.Categories.UnitTest.Application.Queries
             result.Datas.Count.Should().Be(categories.Count);
 
             _categoryRepositoryMock.Verify(repo => repo.GetAll(new CancellationToken()), Times.Once);
+
         }
     }
 }

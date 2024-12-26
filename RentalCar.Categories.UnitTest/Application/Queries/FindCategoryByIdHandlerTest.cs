@@ -39,6 +39,7 @@ namespace RentalCar.Categories.UnitTest.Application.Queries
             result.Succeeded.Should().BeTrue();
 
             _categoryRepositoryMock.Verify(repo => repo.GetById(It.IsAny<string>(), new CancellationToken()), Times.Once);
+          
         }
     }
 }
