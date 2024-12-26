@@ -20,4 +20,35 @@ public class PrometheusService : IPrometheusService
     {
         _counter.Add(1, KeyValuePair.Create<string, object?>("category_error_code",statusCode));
     }
+
+    public void AddNewCategoryCounter(string statusCodes)
+    {
+        System.Diagnostics.Debug.Print(statusCodes);
+    }
+
+    public void AddDeleteCategoryCounter(string statusCodes)
+    {
+        System.Diagnostics.Debug.Print(statusCodes);
+    }
+
+    public void AddUpdateCategoryCounter(string statusCodes)
+    {
+        System.Diagnostics.Debug.Print(statusCodes);
+    }
+
+    public void AddUpdateStatusCategoryCounter(string statusCodes)
+    {
+        System.Diagnostics.Debug.Print(statusCodes);
+    }
+
+    public void AddFindByIdCategoryCounter(string statusCodes)
+    {
+        System.Diagnostics.Debug.Print(statusCodes);
+    }
+
+    public void AddFindAllCategorysCounter(string statusCodes)
+    {
+        System.Diagnostics.Debug.Print(statusCodes);
+    }
+    
 }

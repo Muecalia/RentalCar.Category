@@ -1,8 +1,9 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
-using RentalCar.Categories.Application.Handlers.Categories;
-using RentalCar.Categories.Application.Validators.Categories;
+using RentalCar.Categories.Application.Handlers;
+using RentalCar.Categories.Application.Services;
+using RentalCar.Categories.Application.Validators;
 
 namespace RentalCar.Categories.Application
 {
@@ -12,7 +13,8 @@ namespace RentalCar.Categories.Application
         {
             services
                 .AddFluentValidation()
-                .AddHandlers();
+                .AddHandlers()
+                .AddBackgroundServices();
             return services;
         }
 
@@ -29,6 +31,12 @@ namespace RentalCar.Categories.Application
         {
             services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<CreateCategoryHandler>());
 
+            return services;
+        }
+        
+        private static IServiceCollection AddBackgroundServices(this IServiceCollection services)
+        {
+            services.AddHostedService<CategoryService>();
             return services;
         }
 

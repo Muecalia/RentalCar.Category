@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
-using RentalCar.Categories.Application.Commands.Request.Categories;
-using RentalCar.Categories.Application.Handlers.Categories;
+using RentalCar.Categories.Application.Commands.Request;
+using RentalCar.Categories.Application.Handlers;
 using RentalCar.Categories.Core.Entities;
 using RentalCar.Categories.Core.Repositories;
 using RentalCar.Categories.Core.Services;
@@ -27,27 +27,27 @@ namespace RentalCar.Categories.UnitTest.Application.Commands
                 Name = "Categoria 1"
             };
 
-            var _categoryRepositoryMock = new Mock<ICategoryRepository>();
-            var _loggerServiceMock = new Mock<ILoggerService>();
-            var _prometheusServiceMock = new Mock<IPrometheusService>();
+            var categoryRepositoryMock = new Mock<ICategoryRepository>();
+            var loggerServiceMock = new Mock<ILoggerService>();
+            var prometheusServiceMock = new Mock<IPrometheusService>();
 
-            _categoryRepositoryMock.Setup(repo => repo.IsCategoryExist(It.IsAny<string>(), new CancellationToken())).ReturnsAsync(false);
-            _categoryRepositoryMock.Setup(repo => repo.Create(It.IsAny<Category>(), new CancellationToken())).ReturnsAsync(category);
-            _prometheusServiceMock.Setup(service => service.AddCategoryCounter(It.IsAny<string>()));
+            categoryRepositoryMock.Setup(repo => repo.IsCategoryExist(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(false);
+            categoryRepositoryMock.Setup(repo => repo.Create(It.IsAny<Category>(), It.IsAny<CancellationToken>())).ReturnsAsync(category);
+            prometheusServiceMock.Setup(service => service.AddNewCategoryCounter(It.IsAny<string>()));
 
             //_prometheusService.AddCategoryCounter(HttpStatusCode.Created.ToString());
-            var createCategoryHandler = new CreateCategoryHandler(_categoryRepositoryMock.Object, _loggerServiceMock.Object, _prometheusServiceMock.Object);
-
+            var createCategoryHandler = new CreateCategoryHandler(categoryRepositoryMock.Object, loggerServiceMock.Object, prometheusServiceMock.Object);
+            
             // Act
-            var result = await createCategoryHandler.Handle(createCategoryRequest, new CancellationToken());
+            var result = await createCategoryHandler.Handle(createCategoryRequest, It.IsAny<CancellationToken>());
 
             // Assert
             result.Data.Should().NotBeNull();
             result.Succeeded.Should().BeTrue();
             result.Message.Should().NotBeNullOrEmpty();
 
-            _categoryRepositoryMock.Verify(repo => repo.IsCategoryExist(It.IsAny<string>(), new CancellationToken()), Times.Once);
-            _categoryRepositoryMock.Verify(repo => repo.Create(It.IsAny<Category>(), new CancellationToken()), Times.Once);
+            categoryRepositoryMock.Verify(repo => repo.IsCategoryExist(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+            categoryRepositoryMock.Verify(repo => repo.Create(It.IsAny<Category>(), It.IsAny<CancellationToken>()), Times.Once);
 
         }
     }

@@ -9,5 +9,5 @@ public interface ICategoryRepository
     Task Delete(Category category, CancellationToken cancellationToken);
     Task<bool> IsCategoryExist(string name, CancellationToken cancellationToken);
     Task<Category?> GetById(string id, CancellationToken cancellationToken);
-    Task<List<Category>> GetAll(CancellationToken cancellationToken);
+    Task<List<Category>> GetAll(int pageNumber, int pageSize, CancellationToken cancellationToken);
 }

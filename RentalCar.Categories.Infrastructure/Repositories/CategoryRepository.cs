@@ -7,9 +7,9 @@ namespace RentalCar.Categories.Infrastructure.Repositories;
 
 public class CategoryRepository : ICategoryRepository
 {
-    private readonly RentalCarCategoryContext _context;
+    private readonly CategoryContext _context;
 
-    public CategoryRepository(RentalCarCategoryContext context)
+    public CategoryRepository(CategoryContext context)
     {
         _context = context;
     }
@@ -29,16 +29,19 @@ public class CategoryRepository : ICategoryRepository
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<List<Category>> GetAll(CancellationToken cancellationToken)
+    public async Task<List<Category>> GetAll(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
         return await _context.Category
+            .AsNoTracking()
             .Where(c => !c.IsDeleted)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Category?> GetById(string Id, CancellationToken cancellationToken)
+    public async Task<Category?> GetById(string id, CancellationToken cancellationToken)
     {
-        return await _context.Category.FirstOrDefaultAsync(c => !c.IsDeleted && string.Equals(c.Id, Id), cancellationToken);
+        return await _context.Category.FirstOrDefaultAsync(c => !c.IsDeleted && string.Equals(c.Id, id), cancellationToken);
     }
 
     public async Task<bool> IsCategoryExist(string name, CancellationToken cancellationToken)

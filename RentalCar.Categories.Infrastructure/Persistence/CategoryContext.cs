@@ -3,9 +3,9 @@ using RentalCar.Categories.Core.Entities;
 
 namespace RentalCar.Categories.Infrastructure.Persistence;
 
-public class RentalCarCategoryContext : DbContext
+public class CategoryContext : DbContext
 {
-    public RentalCarCategoryContext(DbContextOptions<RentalCarCategoryContext> options) : base(options)
+    public CategoryContext(DbContextOptions<CategoryContext> options) : base(options)
     {
     }
 
@@ -16,7 +16,12 @@ public class RentalCarCategoryContext : DbContext
         builder.Entity<Category>(e =>
         {
             e.HasKey(c => c.Id);
-            e.HasIndex(c => c.Name);
+
+            e.Property<string>(c => c.Name)
+                .IsRequired()
+                .HasMaxLength(50);
+            
+            e.HasIndex(c => c.Name).IsUnique();
         });
     }
 }
