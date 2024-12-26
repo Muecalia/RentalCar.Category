@@ -48,7 +48,6 @@ namespace RentalCar.Categories.UnitTest.Application.Commands
 
             categoryRepositoryMock.Verify(repo => repo.GetById(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             categoryRepositoryMock.Verify(repo => repo.Update(It.IsAny<Category>(), It.IsAny<CancellationToken>()), Times.Once);
-
         }
     }
 }
