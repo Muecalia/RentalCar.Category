@@ -1,56 +1,43 @@
-# RentalCar.Category
-Sistema de gestão de Categoria da loja de aluguer de carros.
+# RentalCar.Model
+Microserviço para gestão de categoria dos automoveis da loja de aluguer de carros.
 
-# Language
-1. C#
+# Arquitectura do Projecto
+![Diagrama](https://github.com/user-attachments/assets/3f4e648a-f0dd-4e5f-b633-d5fdbe90098a)
 
-# Framework
-1. .NET CORE 8.0
 
-# Data Base
-1. MySql
+# Entities
+### Category
+| Type         | Variavel       | Descrition |
+|--------------|----------------|------------|
+| string       |   Id           |            |
+| string       |   Name         |            |
+| decimal      |   DailyPrice   |            |
+| DateTime     |   CreatedAt    |            |
+| DateTime     |   UpdatedAt    |            |
+| DateTime     |   DeletedAt    |            |
+| bool         |   IsDeleted    |            |
+<br/>
 
-# Arquitectura
-1. Arquitetura Limpa (Clean Architecture)
-
-# Padrões
-1. CQRS
-2. Repository
-
-# Container
-1. Docker
-2. docker-compose
-3. Requirements: Docker instalado
-4. Run container: docker-compose up -d
-5. Down container: docker-compose down
-
-# Testes
-1. Unitario (Fluent Assertions)
-2. Integração
-
-# Messageria
-1. RabbitMq
-
-# CI/CD
-1.  GitHub Actions
-
-# Logs
-1. Serilog
-
-# Observabilidade
-1. OpenTelemetry
+# Linguagens, Ferramentas e Tecnologias
+<div align="left">
+  <p align="left">
+    <a href="https://go-skill-icons.vercel.app/">
+      <img src="https://go-skill-icons.vercel.app/api/icons?i=cs,dotnet,mysql,rabbitmq,git,kubernetes,docker,sonarqube,swagger,postman,githubactions,aws" />
+    </a>
+  </p>
+</div> <br/>
 
 # Monitoramento
-1. Prometheus 
-2. Grafana
+<div align="left">
+  <p align="left">
+    <a href="https://go-skill-icons.vercel.app/">
+      <img src="https://go-skill-icons.vercel.app/api/icons?i=prometheus,grafana" />
+    </a>
+  </p>
+</div> <br/>
 
-# Tracing 
-1. Jeager
+# Observabilidade e Tracing
+![Jaeger_OpenTelemetry](https://github.com/user-attachments/assets/bac7e17b-c42c-48a8-83ab-c0c3c1b0f3dc)
 
-# SonarQube
-docker run --name sonarqube -p 9000:9000 sonarqube:community
+<br/>
 
-
-# Migration
-dotnet ef migrations add FirstMigration --project RentalCar.Categories.Infrastructure -o Persistence/Migrations -s RentalCar.Categories.Api
-dotnet ef database update --project RentalCar.Categories.Infrastructure -s RentalCar.Categories.Api
