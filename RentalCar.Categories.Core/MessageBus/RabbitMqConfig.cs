@@ -1,4 +1,4 @@
-namespace RentalCar.Categories.Core.Configs;
+namespace RentalCar.Categories.Core.MessageBus;
 
 public class RabbitMqConfig
 {

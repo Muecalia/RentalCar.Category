@@ -47,6 +47,10 @@ Sistema de gestão de Categoria da loja de aluguer de carros.
 # Tracing 
 1. Jeager
 
+# SonarQube
+docker run --name sonarqube -p 9000:9000 sonarqube:community
+
+
 # Migration
-dotnet ef migrations add FirstMigration --project RentalCar.Categories.Infrastructure -s RentalCar.Categories.Api
+dotnet ef migrations add FirstMigration --project RentalCar.Categories.Infrastructure -o Persistence/Migrations -s RentalCar.Categories.Api
 dotnet ef database update --project RentalCar.Categories.Infrastructure -s RentalCar.Categories.Api

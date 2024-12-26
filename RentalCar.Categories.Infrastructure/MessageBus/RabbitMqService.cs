@@ -3,6 +3,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RentalCar.Categories.Core.Configs;
+using RentalCar.Categories.Core.MessageBus;
 using RentalCar.Categories.Core.Services;
 
 namespace RentalCar.Categories.Infrastructure.MessageBus;
@@ -25,27 +26,23 @@ public class RabbitMqService : IRabbitMqService
             HostName = _rabbitMqConfig.HostName,
             UserName = _rabbitMqConfig.UserName,
             Password = _rabbitMqConfig.Password
-            //RequestedConnectionTimeout = TimeSpan.FromSeconds(60)
         };
 
-        var endpoints = new List<AmqpTcpEndpoint> {
-            new AmqpTcpEndpoint("host.docker.internal")
-        };
-
-        return await factory.CreateConnectionAsync(endpoints, cancellationToken);
+        return await factory.CreateConnectionAsync(cancellationToken);
     }
 
-    public async Task FecharConexao(IConnection connection, IChannel channel, CancellationToken cancellationToken)
+    public async Task CloseConnection(IConnection connection, IChannel channel, CancellationToken cancellationToken)
     {
         try
         {
             await channel.CloseAsync(cancellationToken);
+            await channel.DisposeAsync();
             await connection.CloseAsync(cancellationToken);
-            _loggerService.LogInformation("RabbitMqService -> Conexão fechada com sucesso");
+            await connection.DisposeAsync();
         }
         catch (Exception ex)
         {
-            _loggerService.LogError($"RabbitMqService -> Erro ao fechar a conexão. Mensagem: {ex.Message}");
+            _loggerService.LogInformation(MessageError.FecharConexão(ex.Message));
             throw;
         }
     }
@@ -53,7 +50,9 @@ public class RabbitMqService : IRabbitMqService
     public async Task PublishMessage<T>(T message, string queue, CancellationToken cancellationToken)
     {
         using var connection = await CreateConnection(cancellationToken);
+
         using var channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken);
+
         try
         {
             await channel.QueueDeclareAsync(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: null, cancellationToken: cancellationToken);
@@ -64,16 +63,16 @@ public class RabbitMqService : IRabbitMqService
 
             await channel.BasicPublishAsync(exchange: "", routingKey: queue, body: body, cancellationToken);
 
-            _loggerService.LogInformation("RabbitMqService -> Sucesso ao publicar a mensagem.");
+            _loggerService.LogInformation($"Sucesso ao publicar a mensagem na fila {queue}.");
         }
         catch (Exception ex)
         {
-            _loggerService.LogError("RabbitMqService -> Erro ao publicar a mensagem.", ex);
+            _loggerService.LogError($"Error ao publicar a mensagem. Mensagem: {ex.Message}");
             throw;
         }
         finally
         {
-            await FecharConexao(connection, channel, cancellationToken);
+            await CloseConnection(connection, channel, cancellationToken);
         }
     }
 }
