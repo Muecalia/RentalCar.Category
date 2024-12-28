@@ -37,6 +37,7 @@ namespace RentalCar.Categories.Application
         private static IServiceCollection AddBackgroundServices(this IServiceCollection services)
         {
             services.AddHostedService<CategoryService>();
+            services.AddHostedService<FindCategoryService>();
             return services;
         }
 
