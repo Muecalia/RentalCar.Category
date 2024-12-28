@@ -1,6 +1,7 @@
 ﻿services:
   category.api:
-    image: rentalcar.categories.api    
+    image: rentalcar.categories.api
+    restart: always
     depends_on:
       - category.db
     build:

@@ -16,6 +16,14 @@ Microserviço para gestão de categoria dos automoveis da loja de aluguer de car
 | DateTime     |   UpdatedAt    |            |
 | DateTime     |   DeletedAt    |            |
 | bool         |   IsDeleted    |            |
+
+<br/>
+
+# Auxiliary Projects
+| Project      | Link       | 
+|--------------|----------------------------------------------------|
+| Security     | https://github.com/Muecalia/RentalCar.Security     |
+
 <br/>
 
 # Linguagens, Ferramentas e Tecnologias
