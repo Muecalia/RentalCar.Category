@@ -1,4 +1,4 @@
-# RentalCar.Model
+# RentalCar.Category
 Microserviço para gestão de categoria dos automoveis da loja de aluguer de carros.
 
 # Arquitectura do Projecto
